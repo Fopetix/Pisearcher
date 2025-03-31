@@ -6,8 +6,8 @@ import os
 results = np.load("best_digits.npy")
 
 # Video parameters
-FRAME_WIDTH = 12
-FRAME_HEIGHT = 9
+FRAME_WIDTH = 8
+FRAME_HEIGHT = 6
 frame_scale = 45
 fps = 29.97
 video_size = (FRAME_WIDTH * frame_scale, FRAME_HEIGHT * frame_scale)
