@@ -16,7 +16,7 @@ PI_BITS_FILE = "pi_input/pi_packed.bin"
 FRAMES_FILE = "bad_apple_frames.npy"
 OUTPUT_FILE = "best_digits.npy"
 PI_LENGTH = 1_000_000_000
-FRAME_SIZE = 108
+FRAME_SIZE = 48
 
 # Load data with validation
 pi_data = np.fromfile(PI_BITS_FILE, dtype=np.uint32)
@@ -43,23 +43,23 @@ __global__ void find_best_matches(
 
     int frame_idx = blockIdx.x;
     int tid = threadIdx.x;
-    int local_best_dist = 108;
+    int local_best_dist = 48;
     long long local_best_pos = -1;
 
     // Load target frame
-    __shared__ uint8_t target[108];
-    if(tid < 108) {
-        target[tid] = frames[frame_idx * 108 + tid];
+    __shared__ uint8_t target[48];
+    if(tid < 48) {
+        target[tid] = frames[frame_idx * 48 + tid];
     }
     __syncthreads();
 
     // Main search loop
-    for(long long pos = tid; pos < pi_length - 108; pos += blockDim.x) {
+    for(long long pos = tid; pos < pi_length - 48; pos += blockDim.x) {
         int dist = 0;
         int chunk_idx = pos >> 5;
         int bit_offset = 31 - (pos % 32);
 
-        for(int i=0; i<108; i++) {
+        for(int i=0; i<48; i++) {
             uint32_t chunk = __ldg(&pi_bits[chunk_idx]);
             int pi_bit = (chunk >> bit_offset) & 1;
             dist += abs(pi_bit - target[i]);
@@ -105,7 +105,7 @@ mod = SourceModule(cuda_code)
 search_func = mod.get_function("find_best_matches")
 
 # GPU memory allocation (correct types)
-best_dists = np.full(num_frames, 108, dtype=np.int32)
+best_dists = np.full(num_frames, 48, dtype=np.int32)
 best_pos = np.full(num_frames, -1, dtype=np.int64)
 
 pi_gpu = cuda.mem_alloc(pi_data.nbytes)
@@ -180,8 +180,8 @@ print(f"Valid positions found: {len(valid_pos)}/{num_frames}")
 
 if len(valid_pos) > 0:
     hamming_distances = final_results['distance'][valid_indices]
-    avg_h = 1 - (np.mean(hamming_distances) / 108)
-    best_h = 1 - (np.min(hamming_distances) / 108)
+    avg_h = 1 - (np.mean(hamming_distances) / 48)
+    best_h = 1 - (np.min(hamming_distances) / 48)
     print(f"Best match similarity: {best_h:.2%}")
     print(f"Average similarity: {avg_h:.2%}")
 else:
