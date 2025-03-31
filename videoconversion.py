@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 # Configuration
-img_size = (12, 9)  # Target resolution (width, height)
+img_size = (8, 6)  # Target resolution (width, height)
 output_dir = "frames/scaled_down/"  # Changed to binary frames directory
 os.makedirs(output_dir, exist_ok=True)
 framename = "scaleddown_"
