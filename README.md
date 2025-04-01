@@ -1,8 +1,8 @@
 # Pi Searcher
 
 This project is made for searching through a given binary sequence for a specified binary string. Specifically, frames of a video are searched using GPU parallelization with CUDA. It also includes tools to convert videos to the given format and back. 
-Originally this was made to run Bad Apple oon digits of Pi.
-Video
+Originally this was made to run Bad Apple on digits of Pi.
+https://youtu.be/MUC41Ie-iwg?si=XijWZRe8_HS0nrmP
 
 ## How to Run This Yourself
 
